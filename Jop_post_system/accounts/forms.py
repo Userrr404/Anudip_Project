@@ -14,4 +14,4 @@ class SignUpForm(forms.ModelForm):
 class JobForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ['company_name', 'role_required', 'address', 'description', 'salary', 'experience', 'skills_required', 'category']
+        fields = ['company_name', 'role_required', 'address', 'description', 'salary', 'experience', 'skills_required', 'category', 'company_email']

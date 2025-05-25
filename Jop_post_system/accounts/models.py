@@ -12,6 +12,7 @@ class Job(models.Model):
 
     
     company_name = models.CharField(max_length=100, default="XYZ")
+    company_email = models.EmailField(default="company@example.com")
     role_required = models.CharField(max_length=100, default="Developer")
     address = models.TextField(default="Not specified")
     description = models.TextField()

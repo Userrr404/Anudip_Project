@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Details</title>
 </head>
 <body>
-   {% extends 'base.html' %}
+    {% extends 'base.html' %}
 
 {% block title %}Post a Job{% endblock %}
 
@@ -17,6 +17,11 @@
     {{ form.as_p }}
     <button type="submit" class="btn btn-success">Submit</button>
   </form>
-{% endblock %}
+
+
+    <br>
+    <a href="{% url 'home' %}">Back to Home</a>
+
+    {% endblock %}
 </body>
 </html>
