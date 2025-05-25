@@ -4,18 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        .profile-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .profile-dropdown {
+            display: none;
+            background-color: #f1f1f1;
+            position: absolute;
+            right: 0;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            padding: 10px;
+            z-index: 1;
+        }
+        .profile-icon:hover + .profile-dropdown {
+            display: block;
+        }
+        .btn {
+            padding: 8px 12px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
     <h2>Home Page</h2>
+
     {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }} | <a href="{% url 'logout' %}">Logout</a></p>
-        <!-- <a href="{% url 'post_job' %}" class="btn btn-primary">Post a Job</a> -->
+        <div class="profile-container">
+            <span class="profile-icon" style="cursor: pointer;">👤</span>
+            <div class="profile-dropdown">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><a href="{% url 'logout' %}">Logout</a></p>
+                {% if user.is_superuser %}
+                    <a href="{% url 'admin_profile' %}" class="btn">Admin Panel</a>
+                {% endif %}
+            </div>
+        </div>
+        <p>Welcome, {{ user.username }}</p>
     {% else %}
         <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'signup' %}">Sign up</a></p>
     {% endif %}
 
+    <br>
+
+    <a href="{% url 'post_job' %}" class="btn">Post a Job</a>
+
     {% if jobs %}
-    <a href="{% url 'post_job' %}" class="btn btn-primary">Post a Job</a>
         <ul>
             {% for job in jobs %}
                 <li>
@@ -28,6 +73,5 @@
     {% else %}
         <p>No job has been posted.</p>
     {% endif %}
-
 </body>
 </html>

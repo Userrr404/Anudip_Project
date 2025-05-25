@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Profile</title>
+</head>
+<body>
+    <h2>Welcome Admin - {{ user.username }}</h2>
+    <p>Email: {{ user.email }}</p>
+    <p>You have admin privileges.</p>
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

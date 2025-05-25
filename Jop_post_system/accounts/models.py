@@ -23,7 +23,8 @@ class Job(models.Model):
     posted_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.company_name
+        return f"{self.company_name or 'Unknown Company'} - {self.role_required or 'Unknown Role'}"
+
 
 
 # Create your models here.

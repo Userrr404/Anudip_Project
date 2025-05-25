@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import JobForm, SignUpForm
 from .models import Job
 
+from django.contrib.admin.views.decorators import staff_member_required
+
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -52,6 +54,10 @@ def post_job_view(request):
 def job_detail_view(request, job_id):
     job = get_object_or_404(Job, id=job_id)
     return render(request, 'accounts/job_details.html', {'job': job})
+
+@staff_member_required
+def admin_profile_view(request):
+    return render(request, 'accounts/admin_profile.html')
 
 
 # Create your views here.
