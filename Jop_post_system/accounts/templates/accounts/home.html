@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <h2>Home Page</h2>
+    {% if user.is_authenticated %}
+        <p>Welcome, {{ user.username }} | <a href="{% url 'logout' %}">Logout</a></p>
+        <!-- <a href="{% url 'post_job' %}" class="btn btn-primary">Post a Job</a> -->
+    {% else %}
+        <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'signup' %}">Sign up</a></p>
+    {% endif %}
+
+    {% if jobs %}
+    <a href="{% url 'post_job' %}" class="btn btn-primary">Post a Job</a>
+        <ul>
+            {% for job in jobs %}
+                <li>
+                    <a href="{% url 'job_detail' job.id %}">
+                        <strong>{{ job.company_name }}</strong> - {{ job.role_required }} - {{ job.address }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No job has been posted.</p>
+    {% endif %}
+
+</body>
+</html>
