@@ -59,5 +59,8 @@ def job_detail_view(request, job_id):
 def admin_profile_view(request):
     return render(request, 'accounts/admin_profile.html')
 
+@login_required
+def user_profile(request):
+    return render(request, 'accounts/user_profile.html')
 
 # Create your views here.

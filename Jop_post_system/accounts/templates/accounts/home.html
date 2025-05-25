@@ -41,7 +41,7 @@
 
     {% if user.is_authenticated %}
         <div class="profile-container">
-            <span class="profile-icon" style="cursor: pointer;">👤</span>
+            <!-- <span class="profile-icon" style="cursor: pointer;">👤</span>
             <div class="profile-dropdown">
                 <p><strong>Username:</strong> {{ user.username }}</p>
                 <p><strong>Email:</strong> {{ user.email }}</p>
@@ -49,7 +49,8 @@
                 {% if user.is_superuser %}
                     <a href="{% url 'admin_profile' %}" class="btn">Admin Panel</a>
                 {% endif %}
-            </div>
+            </div> -->
+            <a href="{% url 'user_profile' %}" class="profile-icon" style="font-size: 24px; text-decoration: none;">👤</a>
         </div>
         <p>Welcome, {{ user.username }}</p>
     {% else %}
