@@ -1,37 +1,191 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Details</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Job Details</title>
+    <style>
+        /* Reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+
+            /* Gradient background */
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            /* Background image overlay (subtle geometric pattern) */
+            background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+            background-repeat: repeat;
+            background-blend-mode: overlay;
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(38, 62, 102, 0.15);
+            padding: 40px 50px;
+            border: 1px solid #e3e9f3;
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 40px rgba(38, 62, 102, 0.25);
+        }
+
+        h2 {
+            margin-top: 0;
+            font-weight: 700;
+            color: #1f2a56;
+            border-bottom: 3px solid #2575fc;
+            padding-bottom: 12px;
+            font-size: 2.2rem;
+            letter-spacing: 0.02em;
+        }
+
+        p {
+            line-height: 1.7;
+            margin: 14px 0;
+            font-size: 1.1rem;
+            color: #3a4661;
+        }
+
+        p strong {
+            color: #4a5a7b;
+            width: 150px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        form {
+            margin-top: 40px;
+        }
+
+        label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #34495e;
+            font-size: 1.1rem;
+        }
+
+        input[type="file"] {
+            display: block;
+            padding: 10px 12px;
+            border: 1.8px solid #cbd5e1;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        input[type="file"]:focus {
+            outline: none;
+            border-color: #2575fc;
+            box-shadow: 0 0 8px rgba(37, 117, 252, 0.4);
+        }
+
+        button {
+            background-color: #2575fc;
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-top: 22px;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 6px 14px rgba(37, 117, 252, 0.4);
+        }
+        button:hover {
+            background-color: #1a52c4;
+            box-shadow: 0 10px 24px rgba(26, 82, 196, 0.6);
+        }
+
+        .message {
+            margin-top: 18px;
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .error {
+            color: #e74c3c;
+        }
+
+        .success {
+            color: #27ae60;
+        }
+
+        a.back-link {
+            display: inline-block;
+            margin-top: 42px;
+            text-decoration: none;
+            color: #2575fc;
+            font-weight: 700;
+            font-size: 1.1rem;
+            letter-spacing: 0.02em;
+            transition: color 0.3s ease;
+        }
+        a.back-link:hover {
+            color: #1a52c4;
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 25px;
+                margin: 30px 15px;
+            }
+
+            h2 {
+                font-size: 1.8rem;
+            }
+
+            button {
+                width: 100%;
+                padding: 14px 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h2>Job Details</h2>
-    <p><strong>Company:</strong> {{ job.company_name }}</p>
-    <p><strong>Role:</strong> {{ job.role_required }}</p>
-    <p><strong>Address:</strong> {{ job.address }}</p>
-    <p><strong>Company Email:</strong> {{ job.company_email }}</p>
-    <p><strong>Posted at:</strong> {{ job.posted_at }}</p>
-    <p><strong>Skill Required:</strong> {{ job.skills_required }}</p>
-    <p><strong>Experience:</strong> {{ job.experience }}</p>
-    <p><strong>Salary:</strong> {{ job.salary }}</p>
-    <p><strong>Description:</strong> {{ job.description }}</p>
+    <div class="container">
+        <h2>Job Details</h2>
 
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% endif %}
-    {% if success %}
-        <p style="color: green;">{{ success }}</p>
-    {% endif %}
+        <p><strong>Company:</strong> {{ job.company_name }}</p>
+        <p><strong>Role:</strong> {{ job.role_required }}</p>
+        <p><strong>Address:</strong> {{ job.address }}</p>
+        <p><strong>Company Email:</strong> {{ job.company_email }}</p>
+        <p><strong>Posted at:</strong> {{ job.posted_at }}</p>
+        <p><strong>Skill Required:</strong> {{ job.skills_required }}</p>
+        <p><strong>Experience:</strong> {{ job.experience }}</p>
+        <p><strong>Salary:</strong> {{ job.salary }}</p>
+        <p><strong>Description:</strong> {{ job.description }}</p>
 
-    <form method="post" enctype="multipart/form-data" >
-        {% csrf_token %}
-        <label for="resume">Upload Resume (PDF only):</label><br>
-        <input type="file" name="resume" accept="application/pdf" required><br><br>
-        <button type="submit">Apply</button>
-    </form>
+        {% if error %}
+            <p class="message error">{{ error }}</p>
+        {% endif %}
+        {% if success %}
+            <p class="message success">{{ success }}</p>
+        {% endif %}
 
-    <br>
-    <a href="{% url 'home' %}">Back to Home</a>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="resume">Upload Resume (PDF only):</label>
+            <input type="file" name="resume" accept="application/pdf" required />
+            <button type="submit">Apply</button>
+        </form>
+
+        <a class="back-link" href="{% url 'home' %}">&larr; Back to Home</a>
+    </div>
 </body>
 </html>

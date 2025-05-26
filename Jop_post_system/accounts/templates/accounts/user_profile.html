@@ -4,23 +4,127 @@
 <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px 40px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-top: 5px;
+        }
+
+        button, .change-password-btn {
+            margin-top: 25px;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover, .change-password-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .links, .admin-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .links a, .admin-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .admin-link a {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        .admin-link a:hover {
+            background-color: #212529;
+        }
+    </style>
 </head>
 <body>
+<div class="container">
     <h2>User Profile</h2>
 
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>First Name:</strong> {{ user.first_name }}</p>
-    <p><strong>Last Name:</strong> {{ user.last_name }}</p>
+    <form method="POST" action="{% url 'user_profile' %}">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input type="text" name="username" value="{{ user.username }}" required>
 
-    <p>
-        <a href="{% url 'home' %}">← Back to Home</a>
-        |
+        <label for="email">Email:</label>
+        <input type="email" name="email" value="{{ user.email }}" required>
+
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" value="{{ user.first_name }}">
+
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" value="{{ user.last_name }}">
+
+        <button type="submit">Update Profile</button>
+    </form>
+
+    <!-- Change Password Button -->
+    <a href="{% url 'change_password' %}" class="change-password-btn">Change Password</a>
+
+    <div class="links">
+        <a href="{% url 'home' %}">← Back to Home</a> |
         <a href="{% url 'logout' %}">Logout</a>
-    </p>
+    </div>
 
     {% if user.is_staff or user.is_superuser %}
-        <p><a href="/admin/">Go to Admin Panel</a></p>
+    <div class="admin-link">
+        <a href="/admin/">Go to Admin Panel</a>
+    </div>
     {% endif %}
+</div>
 </body>
 </html>

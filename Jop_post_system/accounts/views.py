@@ -36,9 +36,104 @@ def logout_view(request):
     logout(request)
     return redirect('login')
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.shortcuts import render, redirect
+
+@login_required
+def change_password_view(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, form.user)  # Important: keep user logged in
+            return redirect('user_profile')
+    else:
+        form = PasswordChangeForm(user=request.user)
+    return render(request, 'accounts/change_password.html', {'form': form})
+
+
+from django.db.models import Q
+from django.utils.dateparse import parse_date
+
 def home_view(request):
-    jobs = Job.objects.all()
-    return render(request, 'accounts/home.html', {'jobs': jobs})
+    # Get filter parameters from GET request
+    selected_category = request.GET.get('category', '')
+    search_query = request.GET.get('search', '').strip()
+
+    # New filters
+    company_name = request.GET.get('company_name', '').strip()
+    role = request.GET.get('role', '').strip()
+    posted_before = request.GET.get('posted_before', '').strip()
+    # skill = request.GET.get('skill', '').strip()
+    experience = request.GET.get('experience', '').strip()
+    min_salary = request.GET.get('min_salary', '').strip()
+    max_salary = request.GET.get('max_salary', '').strip()
+
+    jobs = Job.objects.all().order_by('-posted_at')
+
+    # Filter by category if provided
+    if selected_category:
+        jobs = jobs.filter(category=selected_category)
+
+    # Search by general search bar (company or role)
+    if search_query:
+        jobs = jobs.filter(
+            Q(company_name__icontains=search_query) |
+            Q(role_required__icontains=search_query)
+        )
+
+    # Filter by company_name
+    if company_name:
+        jobs = jobs.filter(company_name__icontains=company_name)
+
+    # Filter by role
+    if role:
+        jobs = jobs.filter(role_required__icontains=role)
+
+    # Filter by posted_before date
+    if posted_before:
+        date_obj = parse_date(posted_before)
+        if date_obj:
+            jobs = jobs.filter(posted_at__lte=date_obj)
+
+    # # Filter by skill (assuming 'skills' is a CharField or TextField)
+    # if skill:
+    #     jobs = jobs.filter(skills__icontains=skill)
+
+    # Filter by experience (assuming experience is numeric field in years)
+    if experience.isdigit():
+        jobs = jobs.filter(experience__gte=int(experience))
+
+    # Filter by salary (assuming salary is numeric field)
+    if min_salary.isdigit():
+        jobs = jobs.filter(salary__gte=int(min_salary))
+    if max_salary.isdigit():
+        jobs = jobs.filter(salary__lte=int(max_salary))
+
+    # Featured job - pick the latest posted job as featured (or any logic you want)
+    featured_job = Job.objects.order_by('-posted_at').first()
+
+    category_choices = Job.CATEGORY_CHOICES
+
+    context = {
+        'jobs': jobs,
+        'featured_job': featured_job,
+        'category_choices': category_choices,
+        'selected_category': selected_category,
+        'search_query': search_query,
+        # New filters to persist form values
+        'company_name': company_name,
+        'role': role,
+        'posted_before': posted_before,
+        # 'skill': skill,
+        'experience': experience,
+        'min_salary': min_salary,
+        'max_salary': max_salary,
+    }
+    return render(request, 'accounts/home.html', context)
+
 
 @login_required(login_url='login')  # Redirects unauthenticated users to login
 def post_job_view(request):
@@ -63,6 +158,15 @@ def admin_profile_view(request):
 
 @login_required
 def user_profile(request):
+    if request.method == 'POST':
+        user = request.user
+        user.username = request.POST.get('username')
+        user.email = request.POST.get('email')
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.save()
+        return redirect('user_profile')  # ✅ fixed
+
     return render(request, 'accounts/user_profile.html')
 
 from django.core.mail import EmailMessage

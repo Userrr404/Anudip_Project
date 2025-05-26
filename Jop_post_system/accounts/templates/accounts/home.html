@@ -1,78 +1,315 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Job Post System | Home</title>
     <style>
+        body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    padding: 0;
+    color: #333;
+    
+    /* Background gradient */
+    background: linear-gradient(135deg, #e0f0ff, #c2dfff);
+    
+    /* Optional background image, subtle and professional */
+    background-image: url('https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1470&q=80');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    
+    /* Overlay effect with a subtle white tint to improve readability */
+    position: relative;
+}
+
+/* Add an overlay to body using a pseudo element */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(255, 255, 255, 0.7); /* white with opacity */
+    pointer-events: none; /* allows clicks through the overlay */
+    z-index: -1;
+}
+
+
+        header {
+    display: flex;
+    justify-content: space-between; /* welcome on left, profile on right */
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.welcome-text {
+    font-size: 2.4rem; /* make it bigger */
+    font-weight: 700;
+    margin: 0;
+    color: #333;
+}
+
+
         .profile-container {
-            position: absolute;
-            top: 10px;
-            right: 10px;
+            position: relative;
+            display: inline-block;
         }
-        .profile-dropdown {
+
+        .profile-icon {
+            font-size: 26px;
+            cursor: pointer;
+            color: #007bff;
+            transition: color 0.3s;
+            user-select: none;
+        }
+
+        .profile-icon:hover {
+            color: #0056b3;
+        }
+
+        /* Dropdown */
+        .dropdown-content {
             display: none;
-            background-color: #f1f1f1;
             position: absolute;
             right: 0;
-            min-width: 200px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            padding: 10px;
+            background-color: #fff;
+            min-width: 160px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            border-radius: 5px;
             z-index: 1;
         }
-        .profile-icon:hover + .profile-dropdown {
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .profile-container:hover .dropdown-content {
             display: block;
         }
+
         .btn {
-            padding: 8px 12px;
+            padding: 10px 16px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
+            border: none;
             border-radius: 4px;
-            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin: 5px 5px 5px 0;
+            display: inline-block;
         }
+
         .btn:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        select, input[type="text"] {
+            padding: 8px 12px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            min-width: 180px;
+        }
+
+        /* Featured job banner */
+        .featured-job {
+            background: linear-gradient(90deg, #007bff, #00c6ff);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .featured-job h3 {
+            margin: 0 0 8px 0;
+        }
+
+        .featured-job p {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Wrapper to center and position the search/filter form */
+        .search-filter-wrapper {
+            max-width: 1000px;
+            margin: 0 auto 30px auto;
+            padding: 20px 30px;              /* add padding inside the container */
+            background-color: #ffffff;       /* white background */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* subtle shadow for depth */
+            border-radius: 10px;             /* rounded corners */
+            border: 1px solid #ddd;          /* subtle border */
+            background-color: #e6f2ff;  /* very light blue */
+            border-color: #a6c8ff;      /* matching subtle blue border */
+
+        }
+
+
+        /* Info text above the form */
+        .info-text {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        /* Center filter-search-container inputs horizontally */
+        .filter-search-container {
+            justify-content: center; /* center the flex items horizontally */
+            gap: 10px;
+            margin-bottom: 0; /* remove original margin to tighten spacing */
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+
+        .job-list {
+            margin-top: 0;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .job-list li {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 15px 20px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .job-list li:hover {
+            background-color: #e9f3ff;
+            transform: scale(1.01);
+        }
+
+        .job-list a {
+            color: #222;
+            text-decoration: none;
+            display: block;
+        }
+
+        .job-list a:hover {
+            color: #007bff;
+        }
+
+        .auth-links {
+            margin-top: 10px;
+        }
+
+        .welcome {
+            margin-top: 10px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-    <h2>Home Page</h2>
 
-    {% if user.is_authenticated %}
-        <div class="profile-container">
-            <!-- <span class="profile-icon" style="cursor: pointer;">👤</span>
-            <div class="profile-dropdown">
-                <p><strong>Username:</strong> {{ user.username }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-                <p><a href="{% url 'logout' %}">Logout</a></p>
-                {% if user.is_superuser %}
-                    <a href="{% url 'admin_profile' %}" class="btn">Admin Panel</a>
-                {% endif %}
-            </div> -->
-            <a href="{% url 'user_profile' %}" class="profile-icon" style="font-size: 24px; text-decoration: none;">👤</a>
+<header>
+  {% if user.is_authenticated %}
+    <h2 class="welcome-text">Welcome, <strong>{{ user.username }}</strong>!</h2>
+    <div class="profile-container" tabindex="0" aria-haspopup="true" aria-expanded="false">
+        <span class="profile-icon" title="Profile">👤</span>
+        <div class="dropdown-content" role="menu" aria-label="Profile Menu">
+            <a href="{% url 'user_profile' %}">Profile</a>
+            {% if user.is_staff %}
+                <a href="{% url 'admin_profile' %}">Admin Dashboard</a>
+            {% endif %}
+            <a href="{% url 'logout' %}">Logout</a>
         </div>
-        <p>Welcome, {{ user.username }}</p>
-    {% else %}
-        <p><a href="{% url 'login' %}">Login</a> or <a href="{% url 'signup' %}">Sign up</a></p>
-    {% endif %}
+    </div>
+  {% endif %}
+</header>
 
-    <br>
 
-    <a href="{% url 'post_job' %}" class="btn">Post a Job</a>
+{% if user.is_authenticated %}
+    <p class="welcome">Welcome, <strong>{{ user.username }}</strong>!</p>
+    <a href="{% url 'post_job' %}" class="btn">➕ Post a Job</a>
+{% else %}
+    <div class="auth-links">
+        <a href="{% url 'login' %}" class="btn">🔐 Login</a>
+        <a href="{% url 'signup' %}" class="btn">📝 Sign Up</a>
+    </div>
+{% endif %}
 
+<!-- Featured Job Banner -->
+{% if featured_job %}
+<div class="featured-job">
+    <h3>🔥 Featured Job: {{ featured_job.role_required }} at {{ featured_job.company_name }}</h3>
+    <p>{{ featured_job.description|truncatewords:25 }}</p>
+    <a href="{% url 'job_detail' featured_job.id %}" style="color: #ffd700; font-weight: bold;">View Details &raquo;</a>
+</div>
+{% endif %}
+
+<!-- Add this wrapper around the info and filter form -->
+<div class="search-filter-wrapper" aria-label="Search and filter section">
+  <p class="info-text">
+    Use the search fields below to filter jobs by company, role, skills, experience, salary, and posting date.
+  </p>
+
+  <form method="get" action="{% url 'home' %}" class="filter-search-container" aria-label="Job search and filters">
+      <!-- Company Name -->
+      <input type="text" name="company_name" placeholder="Company Name" value="{{ company_name|default:'' }}" aria-label="Filter by company name" />
+
+      <!-- Role -->
+      <input type="text" name="role" placeholder="Role" value="{{ role|default:'' }}" aria-label="Filter by role" />
+
+      <!-- Posted Before -->
+      <input type="date" name="posted_before" value="{{ posted_before|default:'' }}" aria-label="Filter jobs posted before" />
+
+      <!-- Experience (years) -->
+      <select name="experience" aria-label="Filter by experience">
+          <option value="">Experience (years)</option>
+          <option value="0" {% if experience == '0' %}selected{% endif %}>0+</option>
+          <option value="1" {% if experience == '1' %}selected{% endif %}>1+</option>
+          <option value="2" {% if experience == '2' %}selected{% endif %}>2+</option>
+          <option value="3" {% if experience == '3' %}selected{% endif %}>3+</option>
+          <option value="5" {% if experience == '5' %}selected{% endif %}>5+</option>
+          <option value="10" {% if experience == '10' %}selected{% endif %}>10+</option>
+      </select>
+
+      <!-- Salary (min) -->
+      <input type="number" name="min_salary" placeholder="Min Salary" value="{{ min_salary|default:'' }}" aria-label="Minimum salary" min="0" />
+
+      <!-- Salary (max) -->
+      <input type="number" name="max_salary" placeholder="Max Salary" value="{{ max_salary|default:'' }}" aria-label="Maximum salary" min="0" />
+
+      <button type="submit" class="btn">Search</button>
+  </form>
+</div>
+
+
+
+<!-- Job List -->
+<div class="job-list">
     {% if jobs %}
         <ul>
             {% for job in jobs %}
                 <li>
                     <a href="{% url 'job_detail' job.id %}">
-                        <strong>{{ job.company_name }}</strong> - {{ job.role_required }} - {{ job.address }}
+                        <strong>{{ job.company_name }}</strong> — {{ job.role_required }}<br />
+                        <small>{{ job.address }}</small><br />
+                        <small><em>Category:</em> {{ job.get_category_display }}</small>
                     </a>
                 </li>
             {% endfor %}
         </ul>
     {% else %}
-        <p>No job has been posted.</p>
+        <p>No jobs found matching your criteria.</p>
     {% endif %}
+</div>
+
 </body>
 </html>
