@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 from .forms import JobForm, SignUpForm
 from .models import Job
 from django.contrib.admin.views.decorators import staff_member_required
@@ -9,6 +10,32 @@ from django.conf import settings
 import os
 
 def signup_view(request):
+    """
+    Handles user registration through a signup form.
+
+    This view supports both GET and POST HTTP methods:
+    
+    - On GET request:
+        - Initializes and displays a blank SignUpForm.
+        - Renders the 'accounts/signup.html' template with the form.
+    
+    - On POST request:
+        - Binds the submitted data to the SignUpForm.
+        - Validates the form input.
+        - If valid:
+            - Creates a user object without saving it immediately.
+            - Hashes the password using set_password() for security.
+            - Saves the user to the database.
+            - Redirects the user to the 'login' page.
+        - If invalid:
+            - Redisplays the form with validation errors.
+
+    Args:
+        request (HttpRequest): The HTTP request object containing method and form data.
+
+    Returns:
+        HttpResponse: A rendered HTML page (signup form) or a redirect to the login page.
+    """
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -21,6 +48,29 @@ def signup_view(request):
     return render(request, 'accounts/signup.html', {'form': form})
 
 def login_view(request):
+    """
+    Handles user authentication and login.
+
+    This view processes both GET and POST HTTP requests:
+
+    - On GET request:
+        - Renders the login form located at 'accounts/login.html'.
+
+    - On POST request:
+        - Retrieves the username and password from the submitted form data.
+        - Authenticates the user using Django's `authenticate()` method.
+        - If authentication is successful:
+            - Logs in the user using Django's `login()` function.
+            - Redirects the user to the 'home' page (should match a named URL in urls.py).
+        - If authentication fails:
+            - Re-renders the login form with an error message indicating invalid credentials.
+
+    Args:
+        request (HttpRequest): The HTTP request object containing method and form data.
+
+    Returns:
+        HttpResponse: A rendered HTML page (login form with or without error) or a redirect to the home page upon successful login.
+    """
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -35,11 +85,6 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('login')
-
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-from django.shortcuts import render, redirect
 
 @login_required
 def change_password_view(request):
